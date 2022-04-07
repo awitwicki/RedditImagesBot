@@ -37,4 +37,4 @@ cronDaemon.AddJob("0 19 * * *", PostNewPhoto);
 cronDaemon.Start();
 
 // Wait and sleep forever. Let the cron daemon run.
-Thread.Sleep(-1);
+await Task.Delay(Timeout.Infinite);
