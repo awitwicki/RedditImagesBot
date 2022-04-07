@@ -1,6 +1,5 @@
-﻿using RedditImagesBot;
-
-Console.WriteLine("Start");
+﻿using CronNET;
+using RedditImagesBot;
 
 string accessToken = Environment.GetEnvironmentVariable("TELEGRAM_TOKEN")!;
 string channelName = Environment.GetEnvironmentVariable("TELEGRAM_CHANNEL")!;
@@ -15,13 +14,27 @@ if (channelName == null)
 if (redditTopicUrl == null)
     throw new Exception("REDDIT_TOPIC_URL environment variable is not defined");
 
-// Get Top post for today image url
-string imagreUrl = await RedditParser.GetTopOfTheDayPhotoUrl(redditTopicUrl);
+void PostNewPhoto()
+{
+    Console.WriteLine("Start");
 
-// Create Bot instance
-var bot = new PublishBotUnit(accessToken);
+    // Get Top post for today image url
+    string imagreUrl = RedditParser.GetTopOfTheDayPhotoUrl(redditTopicUrl).Result;
 
-// Publish image
-await bot.PublisPhotoAsync(imagreUrl, channelName);
+    // Create Bot instance
+    PublishBotUnit bot = new PublishBotUnit(accessToken);
 
-Console.WriteLine("End");
+    // Publish image
+    bot.PublisPhotoAsync(imagreUrl, channelName).Wait();
+
+    Console.WriteLine("End");
+}
+
+CronDaemon cronDaemon = new CronDaemon();
+
+// Every day at 19:00
+cronDaemon.AddJob("0 19 * * *", PostNewPhoto);
+cronDaemon.Start();
+
+// Wait and sleep forever. Let the cron daemon run.
+Thread.Sleep(-1);
