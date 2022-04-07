@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  redditimagesbot:
+    image: ${DOCKER_REGISTRY-}redditimagesbot
+    build:
+      context: .
+      dockerfile: RedditImagesBot/Dockerfile
+    container_name: redditimagesbot-container
+    restart: always
+    env_file:
+      - .env

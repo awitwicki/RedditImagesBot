@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "RedditImagesBot": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
