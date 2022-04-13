@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HtmlAgilityPack;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,37 +10,65 @@ namespace RedditImagesBot
 {
     internal class RedditParser
     {
-        public static async Task<string> GetContent(string url)
+        public static async Task<(string, string, string)> GetTopOfTheDayPhotoUrl(string topicUrl)
         {
-            HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
-
-            //request.Accept = "application/xrds+xml";  
-            HttpWebResponse response = (HttpWebResponse)request!.GetResponse();
-
-            WebHeaderCollection header = response.Headers;
-
-            var encoding = ASCIIEncoding.ASCII;
-            using (var reader = new System.IO.StreamReader(response.GetResponseStream(), encoding))
-            {
-                string responseText = await reader.ReadToEndAsync();
-                return responseText;
-            }
-        }
-
-        public static async Task<string> GetTopOfTheDayPhotoUrl(string topicUrl)
-        {
+            // Parse url for domain
             string url = $"{topicUrl}top/?t=day";
-
-            string response = await GetContent(url);
-          
-            string imageUrl = response
-                .Split("https://i.imgur.com/")[1]
-                .Split("\"")
+            string domain = url.Split("https://")
+                .Skip(1)
+                .First()
+                .Split("/")
                 .First();
 
-            imageUrl = $"https://i.imgur.com/{imageUrl}";
+            // Request page
+            HtmlWeb web = new HtmlWeb();
+            HtmlDocument htmlDoc = web.Load(url);
 
-            return imageUrl;
+            HtmlNode firstPost = htmlDoc
+                .DocumentNode
+                .SelectSingleNode(@"//div[contains(@class, 'scroll')]");
+
+            // Search for first post
+            HtmlNode postLinkNone = firstPost
+                .Descendants()
+                .Where(x => x.Name == "a")
+                .Select(x => x)
+                .Skip(1)
+                .First();
+            
+            // Get first post usl
+            string postUrl = postLinkNone.Attributes
+                .Where(x => x.Name == "href")
+                .First()
+                .Value;
+
+            // Load post url page
+            htmlDoc = web.Load($"https://{domain}{postUrl}");
+
+            // Get post node
+            HtmlNode postNode = htmlDoc
+                .DocumentNode
+                .SelectSingleNode(@"//div[contains(@data-test-id, 'post-content')]");
+
+            // Get post title
+            string postTitle = postNode
+                .Descendants()
+                .Where(x => x.Name == "h1")
+                .First()
+                .InnerText;
+
+            // Get all links in post
+            var urls = postNode
+                .Descendants()
+                .Where(x => x.Name == "a")
+                .ToList();
+
+            // Filter links to get Image url
+            var imageUrl = urls
+                .First(x => x.FirstChild.Name == "img")
+                .Attributes["href"].Value;
+
+            return (postUrl, postTitle, imageUrl);
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace RedditImagesBot
 {
@@ -22,9 +23,13 @@ namespace RedditImagesBot
         {
             await _botClient.SendTextMessageAsync(channelName, messageText);
         }
-        public async Task PublisPhotoAsync(string photoUrl, string channelName)
+        public async Task PublisPhotoAsync(string photoUrl, string title, string channelName)
         {
-            await _botClient.SendPhotoAsync(channelName, photo: photoUrl, caption: $"[link full]({photoUrl})", parseMode: ParseMode.Markdown);
+            var keyboardMarkup = new InlineKeyboardMarkup(new InlineKeyboardButton[] {
+                    InlineKeyboardButton.WithUrl("link to full resolution", photoUrl),
+            });
+
+            await _botClient.SendPhotoAsync(channelName, photo: photoUrl, caption: title, parseMode: ParseMode.Markdown, replyMarkup: keyboardMarkup);
         }
     }
 }
