@@ -22,4 +22,4 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore RedditImagesBot
     - name: Build
-      run: dotnet build --no-restore RedditImagesBot
+      run: dotnet build RedditImagesBot
