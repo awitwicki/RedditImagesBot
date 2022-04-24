@@ -1,6 +1,10 @@
 # RedditImagesBot
 Bot for posting images to telegram channels
 
+![Tests](https://img.shields.io/github/languages/top/awitwicki/RedditImagesBot)
+![Tests](https://img.shields.io/github/last-commit/awitwicki/RedditImagesBot)
+![Tests](https://github.com/awitwicki/RedditImagesBot/actions/workflows/dotnet.yml/badge.svg)
+
 ## Install
 
 Use next environment variables:
@@ -11,7 +15,7 @@ Use next environment variables:
 
 * `REDDIT_TOPIC_URL=https://www.reddit.com/r/EarthPorn/` - link to subreddit
 
-**Docker compose:**  create `.env` file and fill it with that variables.
+**Docker compose:** create `.env` file and fill it with that variables.
 
 ## Run
 
