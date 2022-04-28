@@ -15,6 +15,9 @@ Use next environment variables:
 
 * `REDDIT_TOPIC_URL=https://www.reddit.com/r/EarthPorn/` - link to subreddit
 
+* `CRON_UTC_STRING=0 15 * * *` - cron UTC string to trigger service to post photo (every day at 15:00)
+
+
 **Docker compose:** create `.env` file and fill it with that variables.
 
 ## Run
