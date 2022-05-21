@@ -1,5 +1,6 @@
 ﻿using CronNET;
 using RedditImagesBot;
+using RedditParser;
 
 string accessToken = Environment.GetEnvironmentVariable("TELEGRAM_TOKEN")!;
 string channelName = Environment.GetEnvironmentVariable("TELEGRAM_CHANNEL")!;
@@ -29,7 +30,7 @@ void PostNewPhoto()
     Console.WriteLine("Start");
 
     // Get Top post for today image url
-    (string postUrl, string title, string imagreUrl) = RedditParser.GetTopOfTheDayPhotoUrl(redditTopicUrl).Result;
+    (string postUrl, string title, string imagreUrl) = RedditParser.RedditParser.GetTopOfTheDayPhotoUrl(redditTopicUrl).Result;
 
     // Create Bot instance
     PublishBotUnit bot = new PublishBotUnit(accessToken);

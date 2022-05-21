@@ -1,14 +1,8 @@
 ﻿using HtmlAgilityPack;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace RedditImagesBot
+namespace RedditParser
 {
-    internal class RedditParser
+    public static class RedditParser
     {
         public static async Task<(string, string, string)> GetTopOfTheDayPhotoUrl(string topicUrl)
         {
@@ -22,7 +16,7 @@ namespace RedditImagesBot
 
             // Request page
             HtmlWeb web = new HtmlWeb();
-            HtmlDocument htmlDoc = web.Load(url);
+            HtmlDocument htmlDoc = await web.LoadFromWebAsync(url);
 
             HtmlNode firstPost = htmlDoc
                 .DocumentNode
@@ -35,7 +29,7 @@ namespace RedditImagesBot
                 .Select(x => x)
                 .Skip(1)
                 .First();
-            
+
             // Get first post usl
             string postUrl = postLinkNone.Attributes
                 .Where(x => x.Name == "href")
