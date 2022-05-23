@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using System.Web;
 
 namespace RedditParser
 {
@@ -50,6 +51,9 @@ namespace RedditParser
                 .Where(x => x.Name == "h1")
                 .First()
                 .InnerText;
+
+            // URLDecode post title
+            postTitle = HttpUtility.HtmlDecode(postTitle);
 
             // Get all links in post
             var urls = postNode
