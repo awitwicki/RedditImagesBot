@@ -30,12 +30,14 @@ void PostNewPhoto()
     Console.WriteLine("Start");
 
     // Get Top post for today image url
+    Console.WriteLine($"Scrap top image urlfrom {redditTopicUrl}");
     (string postUrl, string title, string imagreUrl) = RedditParser.RedditParser.GetTopOfTheDayPhotoUrl(redditTopicUrl).Result;
 
     // Create Bot instance
     PublishBotUnit bot = new PublishBotUnit(accessToken);
 
     // Publish image
+    Console.WriteLine($"Trying to publish image by url {imagreUrl}");
     bot.PublisPhotoAsync(imagreUrl, title, channelName).Wait();
 
     Console.WriteLine("End");
