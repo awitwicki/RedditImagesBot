@@ -1,6 +1,5 @@
 ﻿using CronNET;
 using RedditImagesBot;
-using RedditParser;
 
 string accessToken = Environment.GetEnvironmentVariable("TELEGRAM_TOKEN")!;
 string channelName = Environment.GetEnvironmentVariable("TELEGRAM_CHANNEL")!;
@@ -27,20 +26,27 @@ else
 
 void PostNewPhoto()
 {
-    Console.WriteLine("Start");
+    try
+    {
+        Console.WriteLine("Started");
 
-    // Get Top post for today image url
-    Console.WriteLine($"Scrap top image urlfrom {redditTopicUrl}");
-    (string postUrl, string title, string imagreUrl) = RedditParser.RedditParser.GetTopOfTheDayPhotoUrl(redditTopicUrl).Result;
+        // Get Top post for today image url
+        Console.WriteLine($"Scrap top image urlfrom {redditTopicUrl}");
+        (string postUrl, string title, string imagreUrl) = RedditParser.RedditParser.GetTopOfTheDayPhotoUrl(redditTopicUrl).Result;
 
-    // Create Bot instance
-    PublishBotUnit bot = new PublishBotUnit(accessToken);
+        // Create Bot instance
+        PublishBotUnit bot = new PublishBotUnit(accessToken);
 
-    // Publish image
-    Console.WriteLine($"Trying to publish image by url {imagreUrl}");
-    bot.PublisPhotoAsync(imagreUrl, title, channelName).Wait();
+        // Publish image
+        Console.WriteLine($"Trying to publish image by url {imagreUrl}");
+        bot.PublisPhotoAsync(imagreUrl, title, channelName).Wait();
 
-    Console.WriteLine("End");
+        Console.WriteLine("End");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+    }
 }
 
 CronDaemon cronDaemon = new CronDaemon();
