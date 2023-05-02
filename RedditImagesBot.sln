@@ -11,7 +11,7 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedditParser", "RedditParser\RedditParser.csproj", "{6513B1BC-75C1-4F03-A458-1635925E3571}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{1F0F18D8-F5B1-4168-AC1C-03341446FB9B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedditParser.Tests", "RedditParser.Tests\RedditParser.Tests.csproj", "{1F0F18D8-F5B1-4168-AC1C-03341446FB9B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

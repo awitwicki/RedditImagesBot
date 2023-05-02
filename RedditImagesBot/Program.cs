@@ -1,28 +1,42 @@
 ﻿using CronNET;
 using RedditImagesBot;
 
-string accessToken = Environment.GetEnvironmentVariable("TELEGRAM_TOKEN")!;
-string channelName = Environment.GetEnvironmentVariable("TELEGRAM_CHANNEL")!;
-string redditTopicUrl = Environment.GetEnvironmentVariable("REDDIT_TOPIC_URL")!;
-string cronUtcString = Environment.GetEnvironmentVariable("CRON_UTC_STRING")!;
+Console.WriteLine("Starting");
 
-if (accessToken == null)
-    throw new Exception("TELEGRAM_TOKEN environment variable is not defined");
+string? accessToken = Environment.GetEnvironmentVariable("TELEGRAM_TOKEN");
+string? channelName = Environment.GetEnvironmentVariable("TELEGRAM_CHANNEL");
+string? redditTopicUrl = Environment.GetEnvironmentVariable("REDDIT_TOPIC_URL");
+string? cronUtcString = Environment.GetEnvironmentVariable("CRON_UTC_STRING");
 
-if (channelName == null)
-    throw new Exception("TELEGRAM_CHANNEL environment variable is not defined");
-
-if (redditTopicUrl == null)
-    throw new Exception("REDDIT_TOPIC_URL environment variable is not defined");
-
-if (cronUtcString != null)
+if (string.IsNullOrEmpty(accessToken))
 {
-    //TODO try to parse cron string
+    throw new ArgumentException("TELEGRAM_TOKEN environment variable is not defined");
+}
+
+if (string.IsNullOrEmpty(channelName))
+{
+    throw new ArgumentException("TELEGRAM_CHANNEL environment variable is not defined");
+}
+
+if (string.IsNullOrEmpty(redditTopicUrl))
+{
+    throw new ArgumentException("REDDIT_TOPIC_URL environment variable is not defined");
+}
+
+if (string.IsNullOrEmpty(cronUtcString))
+{
+    throw new ArgumentException("CRON_UTC_STRING environment variable is not defined");
 }
 else
 {
-    throw new Exception("CRON_UTC_STRING environment variable is not defined");
+    // TODO try to validate cron string
+    if (!new CronSchedule().IsValid(cronUtcString))
+    {
+        throw new ArgumentException("CRON_UTC_STRING is defined wrong, use CRON scheme");
+    }
 }
+
+Console.WriteLine("Config validated correctly");
 
 void PostNewPhoto()
 {
@@ -31,15 +45,17 @@ void PostNewPhoto()
         Console.WriteLine("Started");
 
         // Get Top post for today image url
-        Console.WriteLine($"Scrap top image urlfrom {redditTopicUrl}");
-        (string postUrl, string title, string imagreUrl) = RedditParser.RedditParser.GetTopOfTheDayPhotoUrl(redditTopicUrl).Result;
+        Console.WriteLine($"Scrap top image url from {redditTopicUrl}");
+        (var postUrl, var title, var imageUrl) = RedditParser.RedditParser.GetTopOfTheDayPhotoUrl(redditTopicUrl).Result;
 
         // Create Bot instance
         PublishBotUnit bot = new PublishBotUnit(accessToken);
 
         // Publish image
-        Console.WriteLine($"Trying to publish image by url {imagreUrl}");
-        bot.PublisPhotoAsync(imagreUrl, title, channelName).Wait();
+        Console.WriteLine($"Trying to publish image by url {imageUrl}");
+        
+        // TODO Try 3 times (make a nice class for that with action in args)
+        bot.PublishPhotoAsync(imageUrl, title, channelName).Wait();
 
         Console.WriteLine("End");
     }

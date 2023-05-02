@@ -7,18 +7,30 @@ namespace RedditParser
     {
         public static async Task<(string, string, string)> GetTopOfTheDayPhotoUrl(string topicUrl)
         {
-            // Parse url for domain
-            string url = $"{topicUrl}top/?t=day";
-            string domain = url.Split("https://")
-                .Skip(1)
-                .First()
+            var postUrl = await GetTopOfTheDayPostUrl(topicUrl);
+            var (postTitle, imageUrl) = await GetRedditPostImageUrl(postUrl);
+            
+            return (postUrl, postTitle, imageUrl);
+        }
+
+        public static string GetUrlDomain(string url)
+        {
+            return url
+                .Replace("https://" , "")
+                .Replace("http://" , "")
                 .Split("/")
                 .First();
+        }
+
+        public static async Task<string> GetTopOfTheDayPostUrl(string topicUrl)
+        {
+            // Parse url for domain
+            string url = $"{topicUrl}/top/?t=day";
 
             // Request page
             HtmlWeb web = new HtmlWeb();
             HtmlDocument htmlDoc = await web.LoadFromWebAsync(url);
-
+            
             HtmlNode firstPost = htmlDoc
                 .DocumentNode
                 .SelectSingleNode(@"//div[contains(@class, 'scroll')]");
@@ -33,40 +45,38 @@ namespace RedditParser
 
             // Get first post usl
             string postUrl = postLinkNone.Attributes
-                .Where(x => x.Name == "href")
-                .First()
+                .First(x => x.Name == "href")
                 .Value;
+            
+            var domain = GetUrlDomain(topicUrl);
 
+            return $"{domain}{postUrl}";
+        }
+
+        public static async Task<(string, string)> GetRedditPostImageUrl(string postUrl)
+        {
             // Load post url page
-            htmlDoc = web.Load($"https://{domain}{postUrl}");
+            var web = new HtmlWeb();
+            var htmlDoc = web.Load($"https://{postUrl}");
 
-            // Get post node
-            HtmlNode postNode = htmlDoc
+            // Get post name node
+            var postNameNode = htmlDoc
                 .DocumentNode
-                .SelectSingleNode(@"//div[contains(@data-test-id, 'post-content')]");
+                .SelectSingleNode(@"//shreddit-title");
+            
+            // Get post node
+            var postNode = htmlDoc
+                .DocumentNode
+                .SelectSingleNode(@"//shreddit-post");
+            
+            var postTitle = postNameNode.Attributes.First(x => x.Name == "title").Value;
 
-            // Get post title
-            string postTitle = postNode
-                .Descendants()
-                .Where(x => x.Name == "h1")
-                .First()
-                .InnerText;
+            var imageUrl = postNode.Attributes.First(x => x.Name == "content-href").Value;
 
             // URLDecode post title
             postTitle = HttpUtility.HtmlDecode(postTitle);
 
-            // Get all links in post
-            var urls = postNode
-                .Descendants()
-                .Where(x => x.Name == "a")
-                .ToList();
-
-            // Filter links to get Image url
-            var imageUrl = urls
-                .First(x => x.FirstChild.Name == "img")
-                .Attributes["href"].Value;
-
-            return (postUrl, postTitle, imageUrl);
+            return (postTitle, imageUrl);
         }
     }
 }

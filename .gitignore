@@ -1,6 +1,9 @@
+.idea
 .vs
 
 bin/
 obj/
+
+*.user
 
 .env

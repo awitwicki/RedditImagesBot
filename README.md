@@ -13,7 +13,7 @@ Use next environment variables:
 
 * `TELEGRAM_CHANNEL=@yourchannel` - channel name
 
-* `REDDIT_TOPIC_URL=https://www.reddit.com/r/EarthPorn/` - link to subreddit
+* `REDDIT_TOPIC_URL=https://www.reddit.com/r/EarthPorn` - link to subreddit
 
 * `CRON_UTC_STRING=0 15 * * *` - cron UTC string to trigger service to post photo (every day at 15:00)
 
