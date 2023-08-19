@@ -18,33 +18,31 @@ namespace RedditParser
             return url
                 .Replace("https://" , "")
                 .Replace("http://" , "")
-                .Split("/")
-                .First();
+                .Split("/")[0];
         }
 
         public static async Task<string> GetTopOfTheDayPostUrl(string topicUrl)
         {
             // Parse url for domain
-            string url = $"{topicUrl}/top/?t=day";
+            var url = $"{topicUrl}/top/?t=day";
 
             // Request page
-            HtmlWeb web = new HtmlWeb();
-            HtmlDocument htmlDoc = await web.LoadFromWebAsync(url);
+            var web = new HtmlWeb();
+            var htmlDoc = await web.LoadFromWebAsync(url);
             
-            HtmlNode firstPost = htmlDoc
+            var firstPost = htmlDoc
                 .DocumentNode
-                .SelectSingleNode(@"//div[contains(@class, 'scroll')]");
+                .SelectSingleNode(@"//shreddit-post");
 
             // Search for first post
-            HtmlNode postLinkNone = firstPost
+            var postLinkNone = firstPost
                 .Descendants()
                 .Where(x => x.Name == "a")
                 .Select(x => x)
-                .Skip(1)
                 .First();
 
             // Get first post usl
-            string postUrl = postLinkNone.Attributes
+            var postUrl = postLinkNone.Attributes
                 .First(x => x.Name == "href")
                 .Value;
             

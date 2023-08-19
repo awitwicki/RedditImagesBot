@@ -3,10 +3,10 @@ using RedditImagesBot;
 
 Console.WriteLine("Starting");
 
-string? accessToken = Environment.GetEnvironmentVariable("TELEGRAM_TOKEN");
-string? channelName = Environment.GetEnvironmentVariable("TELEGRAM_CHANNEL");
-string? redditTopicUrl = Environment.GetEnvironmentVariable("REDDIT_TOPIC_URL");
-string? cronUtcString = Environment.GetEnvironmentVariable("CRON_UTC_STRING");
+var accessToken = Environment.GetEnvironmentVariable("TELEGRAM_TOKEN");
+var channelName = Environment.GetEnvironmentVariable("TELEGRAM_CHANNEL");
+var redditTopicUrl = Environment.GetEnvironmentVariable("REDDIT_TOPIC_URL");
+var cronUtcString = Environment.GetEnvironmentVariable("CRON_UTC_STRING");
 
 if (string.IsNullOrEmpty(accessToken))
 {
@@ -49,7 +49,7 @@ void PostNewPhoto()
         (var postUrl, var title, var imageUrl) = RedditParser.RedditParser.GetTopOfTheDayPhotoUrl(redditTopicUrl).Result;
 
         // Create Bot instance
-        PublishBotUnit bot = new PublishBotUnit(accessToken);
+        var bot = new PublishBotUnit(accessToken);
 
         // Publish image
         Console.WriteLine($"Trying to publish image by url {imageUrl}");
@@ -65,7 +65,7 @@ void PostNewPhoto()
     }
 }
 
-CronDaemon cronDaemon = new CronDaemon();
+var cronDaemon = new CronDaemon();
 
 cronDaemon.AddJob(cronUtcString, PostNewPhoto);
 cronDaemon.Start();
