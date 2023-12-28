@@ -5,8 +5,6 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedditImagesBot", "RedditImagesBot\RedditImagesBot.csproj", "{6BD2E5BA-0E4E-432A-B71A-F0C4E09478D2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CronNET", "CronNET\CronNET\CronNET.csproj", "{08DB20D2-C029-4206-9DB1-930D50240F42}"
-EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{B56A1F10-9EE8-4759-9679-9E6C97142832}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedditParser", "RedditParser\RedditParser.csproj", "{6513B1BC-75C1-4F03-A458-1635925E3571}"
@@ -23,10 +21,6 @@ Global
 		{6BD2E5BA-0E4E-432A-B71A-F0C4E09478D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BD2E5BA-0E4E-432A-B71A-F0C4E09478D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BD2E5BA-0E4E-432A-B71A-F0C4E09478D2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{08DB20D2-C029-4206-9DB1-930D50240F42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{08DB20D2-C029-4206-9DB1-930D50240F42}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{08DB20D2-C029-4206-9DB1-930D50240F42}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{08DB20D2-C029-4206-9DB1-930D50240F42}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B56A1F10-9EE8-4759-9679-9E6C97142832}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B56A1F10-9EE8-4759-9679-9E6C97142832}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B56A1F10-9EE8-4759-9679-9E6C97142832}.Release|Any CPU.ActiveCfg = Release|Any CPU

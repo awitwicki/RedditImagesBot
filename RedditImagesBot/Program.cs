@@ -1,4 +1,4 @@
-﻿using CronNET;
+﻿using Cron.NET;
 using RedditImagesBot;
 
 Console.WriteLine("Starting");
