@@ -6,7 +6,6 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY ["RedditImagesBot/RedditImagesBot.csproj", "RedditImagesBot/"]
-COPY ["CronNET/CronNET/CronNET.csproj", "CronNET/CronNET/"]
 RUN dotnet restore "RedditImagesBot/RedditImagesBot.csproj"
 COPY . .
 WORKDIR "/src/RedditImagesBot"
