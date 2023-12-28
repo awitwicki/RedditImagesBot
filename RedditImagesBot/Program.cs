@@ -1,7 +1,16 @@
 ﻿using Cron.NET;
 using RedditImagesBot;
+using NLog;
 
-Console.WriteLine("Starting");
+LogManager.Setup().LoadConfiguration(builder => {
+    builder.ForLogger()
+        .FilterMinLevel(LogLevel.Info)
+        .WriteToConsole();
+});
+
+var logger = LogManager.GetCurrentClassLogger();
+
+logger.Info("Starting");
 
 var accessToken = Environment.GetEnvironmentVariable("TELEGRAM_TOKEN");
 var channelName = Environment.GetEnvironmentVariable("TELEGRAM_CHANNEL");
@@ -36,32 +45,32 @@ else
     }
 }
 
-Console.WriteLine("Config validated correctly");
+logger.Info("Config validated correctly");
 
 void PostNewPhoto()
 {
     try
     {
-        Console.WriteLine("Started");
+        logger.Info("Start posting new image");
 
         // Get Top post for today image url
-        Console.WriteLine($"Scrap top image url from {redditTopicUrl}");
+        logger.Info($"Scrap top image url from {redditTopicUrl}");
         (var postUrl, var title, var imageUrl) = RedditParser.RedditParser.GetTopOfTheDayPhotoUrl(redditTopicUrl).Result;
 
         // Create Bot instance
         var bot = new PublishBotUnit(accessToken);
 
         // Publish image
-        Console.WriteLine($"Trying to publish image by url {imageUrl}");
+        logger.Info($"Trying to publish image by url {imageUrl}");
         
         // TODO Try 3 times (make a nice class for that with action in args)
         bot.PublishPhotoAsync(imageUrl, title, channelName).Wait();
 
-        Console.WriteLine("End");
+        logger.Info("End");
     }
     catch (Exception ex)
     {
-        Console.WriteLine(ex.Message);
+        logger.Info(ex);
     }
 }
 

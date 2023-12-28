@@ -1,5 +1,6 @@
 ﻿using HtmlAgilityPack;
 using System.Web;
+using NLog;
 
 namespace RedditParser
 {
@@ -29,26 +30,35 @@ namespace RedditParser
             // Request page
             var web = new HtmlWeb();
             var htmlDoc = await web.LoadFromWebAsync(url);
+
+            try
+            {
+                var firstPost = htmlDoc
+                    .DocumentNode
+                    .SelectSingleNode(@"//shreddit-post");
+
+                // Search for first post
+                var postLinkNone = firstPost
+                    .Descendants()
+                    .Where(x => x.Name == "a")
+                    .Select(x => x)
+                    .First();
+
+                // Get first post usl
+                var postUrl = postLinkNone.Attributes
+                    .First(x => x.Name == "href")
+                    .Value;
             
-            var firstPost = htmlDoc
-                .DocumentNode
-                .SelectSingleNode(@"//shreddit-post");
+                var domain = GetUrlDomain(topicUrl);
 
-            // Search for first post
-            var postLinkNone = firstPost
-                .Descendants()
-                .Where(x => x.Name == "a")
-                .Select(x => x)
-                .First();
-
-            // Get first post usl
-            var postUrl = postLinkNone.Attributes
-                .First(x => x.Name == "href")
-                .Value;
-            
-            var domain = GetUrlDomain(topicUrl);
-
-            return $"{domain}{postUrl}";
+                return $"{domain}{postUrl}";
+            }
+            catch (Exception ex)
+            {
+                var logger = LogManager.GetCurrentClassLogger();
+                logger.Error(ex);
+                throw;
+            }
         }
 
         public static async Task<(string, string)> GetRedditPostImageUrl(string postUrl)

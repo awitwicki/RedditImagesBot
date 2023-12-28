@@ -8,13 +8,13 @@ namespace RedditParserTests
     public class RedditParserTests
     {
         [Fact]
-        public void GetTopOfTheDayPhotoUrl_WithSubredditUrl_ShouldReturnNotNull()
+        public async Task GetTopOfTheDayPhotoUrl_WithSubredditUrl_ShouldReturnNotNull()
         {
             // Arrange
             const string subRedditUrl = "https://www.reddit.com/r/EarthPorn";
 
             // Act
-            (var postUrl, var title, var imageUrl) = RedditParser.RedditParser.GetTopOfTheDayPhotoUrl(subRedditUrl).Result;
+            var (postUrl, title, imageUrl) = await RedditParser.RedditParser.GetTopOfTheDayPhotoUrl(subRedditUrl);
 
             // Assert
             Assert.NotNull(imageUrl);
@@ -23,14 +23,14 @@ namespace RedditParserTests
         }
         
         [Fact]
-        public void GetTopOfTheDayPhotoUrl_WithInvalidUrl_ShouldThrowAggregateException()
+        public async Task GetTopOfTheDayPhotoUrl_WithInvalidUrl_ShouldThrowAggregateException()
         {
             // Arrange
-            const string subRedditUrl = "abc";
+            const string subRedditUrl = "https://www.reddit.com/r/EarthPornabc";
 
             // Act and Assert
-            Assert.Throws<AggregateException>(() =>
-                RedditParser.RedditParser.GetTopOfTheDayPhotoUrl(subRedditUrl).Result);
+            await Assert.ThrowsAsync<AggregateException>( async () =>
+                await RedditParser.RedditParser.GetTopOfTheDayPhotoUrl(subRedditUrl));
         }
         
         [Fact]
